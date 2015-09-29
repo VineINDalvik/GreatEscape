@@ -98,26 +98,15 @@ bool HelloWorld::init()
             pos[i][j] = Vec2(cellWidth / 2 + i * cellWidth, cellHeight / 2 +j * cellHeight);
         }
     }
-    /*
-    for(int i = 1; i< MAX_COL; i++){
-        for(int j = 1; j< MAX_COL; j++){
-          //  wallLoc[i][j] = 0;
-        }
-    }*/
-    
-    int seg = 360;
-    float PI = 3.1415926f;
     
     DrawNode *objectA = DrawNode::create();
     auto sprite1 = CCSprite::create("P1.png");
     sprite1->setScale(cellWidth / sprite1->getContentSize().width, cellHeight / sprite1->getContentSize().height);
     objectA->addChild(sprite1);
-    //objectA->drawSolidCircle(Vec2(0, 0), cellHeight/2, PI*2 / seg, seg, Color4F(1.0f, 1.0f, 1.0f, 1.0f));
     
     DrawNode *objectB = DrawNode::create();
     auto sprite2 = CCSprite::create("P2.png");
     sprite2->setScale(cellWidth / sprite2->getContentSize().width, cellHeight / sprite2->getContentSize().height);    objectB->addChild(sprite2);
-    //objectB->drawSolidCircle(Vec2(0, 0), cellHeight/2, PI*2 / seg, seg, Color4F(1.0f, 1.0f, 1.0f, 1.0f));
     
     objectA->setPosition(pos[0][0]);
     objectB->setPosition(pos[MAX_ROW-1][MAX_COL-1]);
@@ -195,58 +184,18 @@ bool HelloWorld::init()
             }
             selectedNode->setPosition(pos[posIndex->xIndex][posIndex->yIndex]);
 
-         /*
-            if(distanceX > 0 && distanceX > distanceY){
-                // go right
-                moveRight(selectedNode);
-                
-            }else if(distanceY > 0 && distanceY > distanceX){
-                // go up
-                moveUp(selectedNode);
-                
-                
-            }else if(distanceX < 0 && distanceX < distanceY){
-                //go left
-                moveLeft(selectedNode);
-                
-                
-            }else if(distanceY < 0 && distanceY < distanceX){
-                // go down
-                moveDown(selectedNode);
-                
-            }*/
-            
-            if(selectedNode == objectA){
-                selectedNode = objectB;
-            }else{
-                selectedNode = objectA;
-            }
-            
-            /*
-            if(posIndex->wall == 0){
-                isWallTime = false;
-            }else{
-                
-            }
-             */
-            
             
         }else{
             
-           // int offsetXArea = round(finalX / cellWidth) ;
-            //int offsetYArea = round(finalY / cellHeight) ;
-        /*    wallLoc[offsetXArea][offsetYArea] = 1;
-            DrawNode *drawNode = DrawNode::create();
-            drawNode->drawLine(Vec2(<#float xx#>, <#float yy#>), <#const cocos2d::Vec2 &destination#>, <#const cocos2d::Color4F &color#>)
-            
-            
-            nodePos* posIndex = (nodePos *) selectedNode->getUserData();
-            if(posIndex->wall == 0) ;
-            else posIndex->wall--;
-            */
-          
-            
-            
+            nodePos *posIndex = (nodePos *) selectedNode->getUserData();
+            if(posIndex->wall == 0) {
+                if(selectedNode == objectA){
+                    selectedNode = objectB;
+                }else{
+                    selectedNode = objectA;
+                }
+                return;
+            }
             
             DrawNode *objectT = DrawNode::create();
             if(x==0){
@@ -272,10 +221,16 @@ bool HelloWorld::init()
 
                 this->addChild(objectT);
 
+            posIndex->wall--;
+            
+            if(selectedNode == objectA){
+                selectedNode = objectB;
+            }else{
+                selectedNode = objectA;
+            }
             
         }
         isWallTime = !isWallTime;
-        
     };
     
     // Add listener
@@ -308,42 +263,6 @@ void HelloWorld::menuCloseCallback(Ref* pSender)
 #endif
 }
 
-/*
-void HelloWorld::moveUp(Node *drawNode){
-    nodePos *posIndex = (nodePos *) drawNode->getUserData();
-    if(posIndex->yIndex == 7) ;
-    else{
-        posIndex->yIndex++;
-        drawNode->setPosition(pos[posIndex->xIndex][posIndex->yIndex]);
-    }
-}
 
-void HelloWorld::moveRight(Node *drawNode){
-    nodePos *posIndex = (nodePos *) drawNode->getUserData();
-    if(posIndex->xIndex == 7) ;
-    else{
-        posIndex->xIndex++;
-        drawNode->setPosition(pos[posIndex->xIndex][posIndex->yIndex]);
-    }
-}
-
-void HelloWorld::moveLeft(Node *drawNode){
-    nodePos *posIndex = (nodePos *) drawNode->getUserData();
-    if(posIndex->xIndex == 0) ;
-    else{
-        posIndex->xIndex--;
-        drawNode->setPosition(pos[posIndex->xIndex][posIndex->yIndex]);
-    }
-}
-
-void HelloWorld::moveDown(Node *drawNode){
-    nodePos *posIndex = (nodePos *) drawNode->getUserData();
-    if(posIndex->yIndex == 0) ;
-    else{
-        posIndex->yIndex--;
-        drawNode->setPosition(pos[posIndex->xIndex][posIndex->yIndex]);
-    }
-}
-*/
 
 
