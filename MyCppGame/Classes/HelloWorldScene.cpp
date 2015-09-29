@@ -30,10 +30,9 @@ float cellWidth, cellHeight;
 Vec2 pos[MAX_COL][MAX_ROW];
 Node *selectedNode;
 bool isWallTime;
-int wallhoriLoc[MAX_COL][MAX_ROW-1];
 
-
-bool isWall[MAX_COL][MAX_ROW];
+//横0竖1
+bool isWall[MAX_COL][MAX_ROW][2];
 
 struct nodePos{
     int xIndex;
@@ -94,7 +93,9 @@ bool HelloWorld::init()
     
     for (int i = 0; i < MAX_COL; i++) {
         for(int j = 0; j < MAX_ROW; j++){
-            isWall[i][j]=false;
+            for(int x = 0; x < 2; x++){
+                isWall[i][j][x]=false;
+            }
             pos[i][j] = Vec2(cellWidth / 2 + i * cellWidth, cellHeight / 2 +j * cellHeight);
         }
     }
@@ -176,7 +177,7 @@ bool HelloWorld::init()
             posIndex->xIndex+=x;
             posIndex->yIndex+=y;
             if ((posIndex->xIndex<0)||(posIndex->yIndex<0)||(posIndex->xIndex>=MAX_COL)||(posIndex->yIndex>=MAX_ROW)
-           ||(isWall[posIndex->xIndex][posIndex->yIndex]==true))
+           ||(isWallBlock(posIndex->xIndex,posIndex->yIndex,x,y)==true))
             {
                 posIndex->xIndex-=x;
                 posIndex->yIndex-=y;
@@ -205,7 +206,8 @@ bool HelloWorld::init()
                 sprite3->setScale(5 / sprite3->getContentSize().width, cellHeight / sprite3->getContentSize().height);
                 objectT->addChild(sprite3);
             objectT->setPosition(Vec2(lroundf(finalX/cellWidth) * cellWidth-2.5, (lroundf(finalY/cellHeight) + 0.5) * cellHeight));
-        
+                
+                isWall[lroundf(finalX/cellWidth) ][lroundf(finalY/cellHeight)][1]=true;
             }
             else{
                 
@@ -214,10 +216,11 @@ bool HelloWorld::init()
                 sprite4->setScale(cellWidth / sprite4->getContentSize().width, 5 / sprite4->getContentSize().height);
                 objectT->addChild(sprite4);
                 objectT->setPosition(Vec2((lroundf(finalX/cellWidth) + 0.5) * cellWidth ,  lroundf(finalY/cellHeight) * cellHeight-2.5));
+                
+                isWall[lroundf(finalX/cellWidth) ][lroundf(finalY/cellHeight)][0]=true;
             
             }
             
-            isWall[lroundf(finalX/cellWidth) ][lroundf(finalY/cellHeight) ]=true;
 
                 this->addChild(objectT);
 
@@ -243,7 +246,6 @@ bool HelloWorld::init()
 }
 
 
-
 void HelloWorld::drawGrid(DrawNode *drawNode){
     for (int i = 1; i < MAX_COL; i++) {
     drawNode->drawLine(Vec2(i * cellWidth, 0), Vec2(i * cellWidth, size.height), Color4F(1.0f, 1.0f, 1.0f, 1.0f));
@@ -262,6 +264,30 @@ void HelloWorld::menuCloseCallback(Ref* pSender)
     exit(0);
 #endif
 }
+
+
+bool HelloWorld::isWallBlock(int xIndex,int yIndex,int x,int y){
+    //考虑边际情况
+    //1.四个角上 只需要两块木桩就能锁住一个游戏人物
+    //2.四条边上，组成三边只有两种情况，在中间则参与四组
+    //3.可以利用补集思想
+    
+    //以上是废话
+    
+    if(x==1 && isWall[xIndex][yIndex][1]){
+        return true;
+    }else if(y==1 && isWall[xIndex][yIndex][0]){
+        return true;
+    }else if(x==-1 && isWall[xIndex+1][yIndex][1]){
+        return true;
+    }else if(y==-1 && isWall[xIndex][yIndex+1][0]){
+        return true;
+    }
+        
+    
+    return false;
+}
+
 
 
 

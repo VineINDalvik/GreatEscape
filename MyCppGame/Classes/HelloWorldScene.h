@@ -20,11 +20,7 @@ public:
     // implement the "static create()" method manually
     CREATE_FUNC(HelloWorld);
     
-    void moveUp(cocos2d::Node *drawNode);
-    void moveRight(cocos2d::Node *drawNode);
-    void moveDown(cocos2d::Node *drawNode);
-    void moveLeft(cocos2d::Node *drawNode);
-    
+    bool isWallBlock(int widthIndex,int heightIndex,int offsetX,int offsetY);
 };
 
 #endif // __HELLOWORLD_SCENE_H__
