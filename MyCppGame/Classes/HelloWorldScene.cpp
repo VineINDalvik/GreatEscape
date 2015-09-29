@@ -200,20 +200,20 @@ bool HelloWorld::init()
             DrawNode *objectT = DrawNode::create();
             if(x==0){
             
-            objectT->drawSolidRect(Vec2(0, 0), Vec2(5, cellHeight), Color4F(1.0f, 1.0f, 1.0f, 1.0f));
-//                auto sprite3 = CCSprite::create("wall.png");
-//                sprite3->setScale(5 / sprite3->getContentSize().width, cellHeight / sprite3->getContentSize().height);
-//                objectT->addChild(sprite3);
-            objectT->setPosition(Vec2(lroundf(finalX/cellWidth) * cellWidth-2.5,  lroundf(finalY/cellHeight) * cellHeight));
+            //objectT->drawSolidRect(Vec2(0, 0), Vec2(5, cellHeight), Color4F(1.0f, 1.0f, 1.0f, 1.0f));
+                auto sprite3 = CCSprite::create("wall.png");
+                sprite3->setScale(5 / sprite3->getContentSize().width, cellHeight / sprite3->getContentSize().height);
+                objectT->addChild(sprite3);
+            objectT->setPosition(Vec2(lroundf(finalX/cellWidth) * cellWidth-2.5, (lroundf(finalY/cellHeight) + 0.5) * cellHeight));
         
             }
             else{
                 
-                objectT->drawSolidRect(Vec2(cellWidth, 5), Vec2(0, 0), Color4F(1.0f, 1.0f, 1.0f, 1.0f));
-//                auto sprite4 = CCSprite::create("wall.png");
-//                sprite4->setScale(cellWidth / sprite4->getContentSize().width, 5 / sprite4->getContentSize().height);
-//                objectT->addChild(sprite4);
-                objectT->setPosition(Vec2(lroundf(finalX/cellWidth) * cellWidth  ,  lroundf(finalY/cellHeight) * cellHeight-2.5));
+                //objectT->drawSolidRect(Vec2(cellWidth, 5), Vec2(0, 0), Color4F(1.0f, 1.0f, 1.0f, 1.0f));
+                auto sprite4 = CCSprite::create("wall.png");
+                sprite4->setScale(cellWidth / sprite4->getContentSize().width, 5 / sprite4->getContentSize().height);
+                objectT->addChild(sprite4);
+                objectT->setPosition(Vec2((lroundf(finalX/cellWidth) + 0.5) * cellWidth ,  lroundf(finalY/cellHeight) * cellHeight-2.5));
             
             }
             
