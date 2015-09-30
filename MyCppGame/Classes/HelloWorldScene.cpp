@@ -35,6 +35,9 @@ bool isWallTime;
 //横0竖1
 bool isWall[MAX_COL][MAX_ROW][2];
 
+//判断木桩用完
+bool isJump;
+
 struct nodePos{
     int xIndex;
     int yIndex;
@@ -181,7 +184,9 @@ bool HelloWorld::init()
             {
                 posIndex->xIndex-=x;
                 posIndex->yIndex-=y;
-                isWallTime = !isWallTime;
+                if(!isJump){
+                    isWallTime = !isWallTime;
+                }
                 return;
             }
             selectedNode->setPosition(pos[posIndex->xIndex][posIndex->yIndex]);
@@ -193,16 +198,30 @@ bool HelloWorld::init()
                 }
             }
             
+            if(isJump){
+                if(selectedNode == objectA){
+                    selectedNode = objectB;
+                }else{
+                    selectedNode = objectA;
+                }
+            }
+            
         }else{
-            bool isJump;
             nodePos *posIndex = (nodePos *) selectedNode->getUserData();
             if(posIndex->wall == 0) {
                 if(selectedNode == objectA){
                     selectedNode = objectB;
                 }else{
                     selectedNode = objectA;
+                    isJump = true;
                 }
-                isWallTime = !isWallTime;
+                if(!isJump)
+                {
+                    isWallTime = !isWallTime;
+                }else
+                {
+                    isWallTime = false;
+                }
                 return;
             }
             
@@ -241,7 +260,10 @@ bool HelloWorld::init()
             }
             
         }
-        isWallTime = !isWallTime;
+        if(!isJump)
+        {
+            isWallTime = !isWallTime;
+        }
     };
     
     // Add listener
