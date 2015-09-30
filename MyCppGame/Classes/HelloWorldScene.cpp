@@ -190,10 +190,13 @@ bool HelloWorld::init()
                 return;
             }
             selectedNode->setPosition(pos[posIndex->xIndex][posIndex->yIndex]);
-            if(posIndex->xIndex == MAX_ROW - 1 && posIndex->yIndex == MAX_COL - 1){
-                if(selectedNode == objectA){
+            
+            if(selectedNode == objectA){
+                if(posIndex->xIndex == MAX_ROW - 1 && posIndex->yIndex == MAX_COL - 1){
                     popupLayer(true);
-                }else{
+                }
+            }else{
+                if(posIndex->xIndex == 0 && posIndex->yIndex == 0){
                     popupLayer(false);
                 }
             }
@@ -323,7 +326,7 @@ void HelloWorld::popupLayer(bool isCharaA)
     // 定义一个弹出层，传入一张背景图
     PopupLayer* pl = PopupLayer::create("cell.png");
     // ContentSize 是可选的设置，可以不设置，如果设置把它当作 9 图缩放
-    pl->setContentSize(CCSizeMake(400, 360));
+    pl->setContentSize(CCSizeMake(200, 180));
     pl->setTitle("标题党");
     if(isCharaA)
     {

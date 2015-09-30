@@ -44,6 +44,18 @@ public:
     virtual void onEnter();
     virtual void onExit();
     
+    //开始触摸
+    bool onTouchBegan(Touch* touch, Event  *event);
+    
+    //滑动
+    void onTouchMoved(Touch* touch, Event  *event);
+    
+    //结束触摸
+    void onTouchEnded(Touch* touch, Event  *event);
+    
+    //取消触摸
+    void onTouchCancelled(Touch* touch, Event* event);
+    
 private:
     
     void buttonCallback(CCObject* pSender);

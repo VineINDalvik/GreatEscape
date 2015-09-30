@@ -50,22 +50,22 @@ bool PopupLayer::init()
         
         this->setTouchMode(Touch::DispatchMode::ONE_BY_ONE);
         
+        //创建一个事件监听器，OneByOne为单点触摸
         auto listener = EventListenerTouchOneByOne::create();
         listener->setSwallowTouches(true);
+        
+        //事件回调函数
+        listener->onTouchBegan = CC_CALLBACK_2(PopupLayer::onTouchBegan, this);
+        listener->onTouchMoved = CC_CALLBACK_2(PopupLayer::onTouchMoved, this);
+        listener->onTouchEnded = CC_CALLBACK_2(PopupLayer::onTouchEnded, this);
+        
+        //添加监听器
         _eventDispatcher->addEventListenerWithSceneGraphPriority(listener, this);
+        
         bRef = true;
     } while (0);
     return bRef;
 }
-
-
-
-
-//bool PopupLayer::ccTouchBegan(cocos2d::CCTouch *pTouch, cocos2d::CCEvent *pEvent)
-//{
-//    CCLog("PopupLayer touch");
-//    return true;
-//}
 
 
 PopupLayer* PopupLayer::create(const char *backgroundImage)
@@ -155,12 +155,12 @@ void PopupLayer::onEnter()
     
     
     // 添加按钮，并设置其位置
-    this->addChild(getMenuButton());
-    float btnWidth = contentSize.width/(getMenuButton()->getChildrenCount()+1);
-    
-    Vector<Node*> array = getMenuButton()->getChildren();
-    Vector<Node*>::iterator pObj ;
-    int i = 0;
+//    this->addChild(getMenuButton());
+//    float btnWidth = contentSize.width/(getMenuButton()->getChildrenCount()+1);
+//    
+//    Vector<Node*> array = getMenuButton()->getChildren();
+//    Vector<Node*>::iterator pObj ;
+//    int i = 0;
 //    for(pObj = array.begin() ; pObj != array.end() ; ++pObj)
 //    {
 //        CCNode* node = dynamic_cast<CCNode*>(pObj);
@@ -198,4 +198,33 @@ void PopupLayer::onExit()
 {
     CCLog("popup on exit.");
     CCLayer::onExit();
+}
+
+//开始触摸
+bool PopupLayer::onTouchBegan(Touch* touch, Event  *event)
+{
+    log("touch began !");
+    
+    return true;
+}
+
+
+//滑动
+void PopupLayer::onTouchMoved(Touch* touch, Event  *event)
+{
+    log("touch moved !");
+}
+
+
+//结束触摸
+void PopupLayer::onTouchEnded(Touch* touch, Event  *event)
+{
+    log("touch ended !");
+}
+
+
+//取消触摸
+void PopupLayer::onTouchCancelled(Touch* touch, Event* event)
+{
+    onTouchEnded(touch, event);
 }
