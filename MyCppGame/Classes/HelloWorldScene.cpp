@@ -1,4 +1,5 @@
 #include "HelloWorldScene.h"
+#include "PopupLayer.h"
 
 USING_NS_CC;
 
@@ -172,7 +173,6 @@ bool HelloWorld::init()
         
         
         if(!isWallTime){
-            
             nodePos *posIndex = (nodePos *) selectedNode->getUserData();
             posIndex->xIndex+=x;
             posIndex->yIndex+=y;
@@ -181,13 +181,20 @@ bool HelloWorld::init()
             {
                 posIndex->xIndex-=x;
                 posIndex->yIndex-=y;
+                isWallTime = !isWallTime;
                 return;
             }
             selectedNode->setPosition(pos[posIndex->xIndex][posIndex->yIndex]);
-
+            if(posIndex->xIndex == MAX_ROW - 1 && posIndex->yIndex == MAX_COL - 1){
+                if(selectedNode == objectA){
+                    popupLayer(true);
+                }else{
+                    popupLayer(false);
+                }
+            }
             
         }else{
-            
+            bool isJump;
             nodePos *posIndex = (nodePos *) selectedNode->getUserData();
             if(posIndex->wall == 0) {
                 if(selectedNode == objectA){
@@ -195,6 +202,7 @@ bool HelloWorld::init()
                 }else{
                     selectedNode = objectA;
                 }
+                isWallTime = !isWallTime;
                 return;
             }
             
@@ -215,7 +223,7 @@ bool HelloWorld::init()
                 auto sprite4 = CCSprite::create("wall.png");
                 sprite4->setScale(cellWidth / sprite4->getContentSize().width, 5 / sprite4->getContentSize().height);
                 objectT->addChild(sprite4);
-                objectT->setPosition(Vec2((lroundf(finalX/cellWidth) + 0.5) * cellWidth ,  lroundf(finalY/cellHeight) * cellHeight-2.5));
+                objectT->setPosition(Vec2((lroundf(finalX/cellWidth) - 0.5) * cellWidth ,  lroundf(finalY/cellHeight) * cellHeight-2.5));
                 
                 isWall[lroundf(finalX/cellWidth) ][lroundf(finalY/cellHeight)][0]=true;
             
@@ -276,17 +284,48 @@ bool HelloWorld::isWallBlock(int xIndex,int yIndex,int x,int y){
     
     if(x==1 && isWall[xIndex][yIndex][1]){
         return true;
-    }else if(y==1 && isWall[xIndex][yIndex][0]){
+    }else if(y==1 && isWall[xIndex+1][yIndex][0]){
         return true;
     }else if(x==-1 && isWall[xIndex+1][yIndex][1]){
         return true;
-    }else if(y==-1 && isWall[xIndex][yIndex+1][0]){
+    }else if(y==-1 && isWall[xIndex+1][yIndex+1][0]){
         return true;
     }
         
     
     return false;
 }
+
+void HelloWorld::popupLayer(bool isCharaA)
+{
+    // 定义一个弹出层，传入一张背景图
+    PopupLayer* pl = PopupLayer::create("cell.png");
+    // ContentSize 是可选的设置，可以不设置，如果设置把它当作 9 图缩放
+    pl->setContentSize(CCSizeMake(400, 360));
+    pl->setTitle("标题党");
+    if(isCharaA)
+    {
+        pl->setContentText("A赢了！", 20, 50, 150);
+    }
+    else
+    {
+        pl->setContentText("B赢了！", 20, 50, 150);
+    }
+    // 设置回调函数，回调传回一个 CCNode 以获取 tag 判断点击的按钮
+    // 这只是作为一种封装实现，如果使用 delegate 那就能够更灵活的控制参数了
+    pl->setCallbackFunc(this, callfuncN_selector(HelloWorld::buttonCallback));
+    // 添加按钮，设置图片，文字，tag 信息
+    pl->addButton("cell.png", "cell.png", "确定", 0);
+    pl->addButton("cell.png", "cell.png", "取消", 1);
+    // 添加到当前层
+    this->addChild(pl);
+}
+
+
+void HelloWorld::buttonCallback(cocos2d::CCNode *pNode){
+    CCLog("button call back. tag: %d", pNode->getTag());
+}
+
 
 
 

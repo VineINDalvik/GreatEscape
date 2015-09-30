@@ -21,6 +21,9 @@ public:
     CREATE_FUNC(HelloWorld);
     
     bool isWallBlock(int widthIndex,int heightIndex,int offsetX,int offsetY);
+    
+    void popupLayer(bool isCharaA);
+    void buttonCallback(cocos2d::CCNode *pNode);
 };
 
 #endif // __HELLOWORLD_SCENE_H__
